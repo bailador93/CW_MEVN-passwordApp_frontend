@@ -9,7 +9,7 @@ export default defineComponent({
 
 <template>
     <div
-        :style="{ fontWeight: 'bold', fontSize: '1.5em', textAlign: orientation, textTransform: isUpper ? 'uppercase' : 'none' }">
+        :style="{ marginBottom: '2%', fontWeight: 'bold', fontSize: '1.5em', textAlign: orientation, textTransform: isUpper ? 'uppercase' : 'none' }">
         {{ text }}
     </div>
 </template>

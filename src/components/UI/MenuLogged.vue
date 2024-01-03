@@ -5,67 +5,64 @@ import { MENU_ADMIN, MENU_USER } from "../../assets/data/dataStatic"
 import ButtonApp from "../UI/ButtonApp.vue"
 
 export default defineComponent({
-    props: ["roleUSER", "route", "isShowMenuClicked", "onshowmenu"],
+    props: ["decodeTOKEN", "route", "isShowMenuClicked", "onshowmenu", "onshowformadduser"],
     components: { ButtonApp },
     data() {
         return {
             nav_admin: MENU_ADMIN,
             nav_user: MENU_USER,
-            // isShowMenuClicked: true,
         };
     },
     methods: {
         onShowMenu(ui: any) {
             if (ui) {
                 this.$router.push({ path: ui.url })
-                // this.isShowMenuClicked = false;
+                // this.isShowMenuClicked = true;
                 // this.resetDataToEdit();
             }
             this.$emit('onshowmenu');
-            // this.isShowMenuClicked = !this.isShowMenuClicked;
-        }
+            this.isShowMenuClicked = !this.isShowMenuClicked;
+        },
+
     }
 })
 </script>
 
 <template>
-    <div class="menu_logged_content" :style="{ minHeight: isShowMenuClicked ? 'auto' : '' }">
-        <ButtonApp v-if="roleUSER === 'USUARIO'"
-            :text="isShowMenuClicked ? 'fa-solid fa-square-caret-left' : 'fa-solid fa-square-caret-down'"
-            :orientation="'right'" :type="'button'" :isIcon="true" @onshowmenu="onShowMenu" />
-        <!-- @onshowmenu="onShowMenu" <-- este esta en el botón debemos hacer el pase se evento con otro nuevo...-->
-        <ul>
-            <RouterLink v-if="roleUSER === 'ADMINISTRADOR'" v-for="na in nav_admin" :to="na.url">
-                <li
-                    :style="{ background: route.path === na.url ? '#042d1c' : '#0a6b42', color: route.path === na.url ? '#B8FADD' : 'black' }">
-                    <span class="hide_item_menu_icon"><i :class="na.icon"></i></span> <span class="hide_item_menu">{{
-                        na.name }}</span>
-                </li>
+    <div class="menu_logged_content">
+        <div :style="{ minHeight: isShowMenuClicked ? 'auto' : '' }">
+            <ButtonApp v-if="decodeTOKEN.role === 'USUARIO'"
+                :text="isShowMenuClicked ? 'fa-solid fa-square-caret-down' : 'fa-solid fa-square-caret-left'"
+                :orientation="'right'" :type="'button'" :isIcon="true" @onshowmenu="onShowMenu" />
+        </div>
+
+        <ul v-if="decodeTOKEN.role === 'ADMINISTRADOR'" >
+            <RouterLink v-for="na in nav_admin" :to="{ name: na.url }">
+                <li>{{ na.name }}</li>
             </RouterLink>
-
-            <div  class="hide_item_text_only_user">
-                <RouterLink v-if="roleUSER === 'USUARIO' && !isShowMenuClicked" v-for="nu in  nav_user " :to="nu.url">
-                    <li
-                        :style="{ background: route.path === nu.url ? '#042d1c' : '#0a6b42', color: route.path === nu.url ? '#B8FADD' : 'black' }">
-                        {{ nu.name }}
-                    </li>
-                </RouterLink>
-            </div>
-
-
-
-            <div class="show_icons_only_user">
-                <RouterLink class="show_icons_only_user" v-if="roleUSER === 'USUARIO'" v-for="nu in  nav_user "
-                    :to="nu.url">
-                    <li
-                        :style="{ background: route.path === nu.url ? '#042d1c' : '#0a6b42', color: route.path === nu.url ? '#B8FADD' : 'black' }">
-                        <span class="hide_item_menu_icon"><i :class="nu.icon"></i></span> <span class="hide_item_menu">{{
-                            nu.name }}</span>
-                    </li>
-                </RouterLink>
-            </div>
-
         </ul>
+
+        <ul v-if="isShowMenuClicked && decodeTOKEN.role === 'USUARIO'">
+            <RouterLink v-for="nu in nav_user" :to="{ name: nu.url }">
+                <li> {{ nu.name }}</li>
+            </RouterLink>
+        </ul>
+        <div class="list_resource_content_user" v-if="!isShowMenuClicked && decodeTOKEN.role === 'USUARIO' && (
+            route.name === 'dash-user-resources' || route.name === 'dash-user-form-resource-add' ||
+            route.name === 'dash-user-form-resource-edit'
+        )">
+            <RouterLink v-for="i in 20" :to="{ name: 'dash-user-form-resource-edit', params: { id: i } }">
+                <div class="item_resource">
+                    <div>
+                        RECURSO
+                    </div>
+                </div>
+            </RouterLink>
+            <div class="btn_float_resource">
+                <ButtonApp :text="'Nuevo recurso'" :orientation="'center'" :type="'button'"
+                    @click="$emit('onshowformadduser')" />
+            </div>
+        </div>
     </div>
 </template>
  
