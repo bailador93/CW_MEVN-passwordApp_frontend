@@ -13,7 +13,9 @@ export default defineComponent({
     },
     mounted() {
         this.getDataStore.getDataAPI(true, "USERS");
-        console.log(this.getDataStore.data_API)
+    },
+    updated() {
+        this.getDataStore.getDataAPI(true, "USERS");
     }
 });
 
@@ -23,21 +25,21 @@ export default defineComponent({
     <div v-if="getDataStore.data_API.isLoading">
         CARGANDO...
     </div>
+
     <div v-else style="padding:0" class="list_resource_content_user">
         <div class="item_resource item_no_hover" v-for="u in getDataStore.data_API.response.data">
             <div class="flex flex-row">
                 <div class="basis-1/2" style="padding: 1%;">
                     {{ u.name + " " + u.lastname }}
                 </div>
-
                 <div class="mb-4 basis-1/2">
                     <LabelInput :text="'Tipo'" :for_name="'type'" />
-
                     <div class="inline-block relative w-64">
-                        <select id="type"
-                            class="auth_form_inputs block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                            <option>Activo</option>
-                            <option>Inactivo</option>
+                        {{u.userIsActiveByAdmin ? "Activo" : "Inactivo"}} Stored.
+                        <select v-model="getDataStore.userActive" 
+                            class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                            <option :value="'true ' + u._id" >Activo</option>
+                            <option :value="'false ' + u._id">Inactivo</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -47,7 +49,6 @@ export default defineComponent({
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -59,7 +60,7 @@ export default defineComponent({
 }
 
 .item_no_hover:hover {
-    cursor:auto;
+    cursor: auto;
     color: black;
     background-color: rgb(130, 183, 126);
 }

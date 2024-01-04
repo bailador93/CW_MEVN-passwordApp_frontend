@@ -64,8 +64,8 @@ export const authStore = defineStore('auth', () => {
         position: 'top'
       });
     } else {
-      connectAPI(false, "POST", typeAuth === "REGISTER" && "register" ||
-        typeAuth === "LOGIN" && "login" || typeAuth === "RECOVERY" && "recovery" || typeAuth === "RESET" && `reset-password/${idParam}`, new_data, $toast, data_API);
+      connectAPI(false, "POST", typeAuth === "REGISTER" && "auth/register" ||
+        typeAuth === "LOGIN" && "auth/login" || typeAuth === "RECOVERY" && "auth/recovery" || typeAuth === "RESET" && `auth/reset-password/${idParam}`, new_data, $toast, data_API);
     }
   }
 
