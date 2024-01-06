@@ -1,4 +1,61 @@
 
+
+
+export const DATA_TYPE_RESOURCE_DEFAULT = {
+    RESOURCES_DEFAULT: ["Tipo de contraseña", "Tipo de tajeta", "Nota"],
+    TYPE_PASSWORD: [
+        {
+            name_input: "Nombre",
+            type_input: "text"
+        },
+        {
+            name_input: "Usuario",
+            type_input: "text"
+        },
+        {
+            name_input: "Contraseña",
+            type_input: "password"
+        },
+        {
+            name_input: "Confirmar contraseña",
+            type_input: "password"
+        }
+    ],
+    TYPE_CARD: [
+        {
+            name_input: "Nombre",
+            type_input: "text"
+        },
+        {
+            name_input: "Nro de tarjeta",
+            type_input: "text"
+        },
+        {
+            name_input: "Mes de expiración",
+            type_input: "text"
+        },
+        {
+            name_input: "Año de expiración",
+            type_input: "text"
+        },
+        {
+            name_input: "Código de seguridad",
+            type_input: "text"
+        }
+    ],
+    NOTE: [
+        {
+            name_input: "Nombre",
+            type_input: "text"
+        },
+        {
+            name_input: "Descripción",
+            type_input: "textarea"
+        }
+    ],
+};
+
+
 export const MENU_ADMIN: Array<object> = [
     {
         url: "dash-admin-account",

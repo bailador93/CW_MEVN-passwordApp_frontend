@@ -1,76 +1,56 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 
-export const connectAPI = async (isToken: Boolean, VERB: string, param: any, data: any = {}, TOAST: any, data_API: any = {}) => {
+export const connectAPI = async (IS_AUTH: boolean, param: string, method: string, data_form: any, isToast: any, DATA_RESPONSE_API: any) => {
 
     const URI = `http://localhost:7000/${param}`;
+    const HEADER = !IS_AUTH ? {} : { usuario_autorizacion: `${localStorage.getItem("TOKEN_AUTH")}` };
 
-    const HEADER = !isToken ? {} : { headers: { "usuario_autorizacion": `${localStorage.getItem("TOKEN_AUTH")}` } };
+    await axios({
+        method: method,
+        url: URI,
+        data: data_form,
+        headers: HEADER
+    }).then((res: any) => {
+        // mostramos el toast (menos para lo que es AUTH) pero hacemos otras lógica
+        if (method === "POST" || method === "PUT" || method === "DELETE") {
 
-    const AXIOS_action: any = (VERB === "GET" && axios.get(URI, HEADER)) || (VERB === "POST" && axios.post(URI, data, HEADER))
-        || (VERB === "PUT" && axios.put(URI, data, HEADER)) || (VERB === "DELETE" && axios.delete(URI, HEADER));
+            if (param === "auth/login") {
+                localStorage.setItem("TOKEN_AUTH", res.data.data.token_auth);
+                window.location.replace("/dashboard")
+            }
 
-    AXIOS_action.then((res: any) => {
+            if (param === "auth/register") {
+                alert("Se te ha enviado un correo para que confirmes tu cuenta. Ahora serás redireccionado");
+                window.location.replace("/auth")
+            }
+        }
 
-        if (VERB === "GET") {
-            data_API.value.isLoading = false;
-            data_API.value.response = {
+        // DATA_RESPONSE_API <-- LO USAMOS ACÁ :D PARA ALMACENAR LA RESPUESTA.
+        if (method === "GET") {
+            DATA_RESPONSE_API.value.isLoading = false;
+            DATA_RESPONSE_API.value.response = {
                 status: res.status,
                 msg: res.data.msg,
-                data: param === "user/users" ? res.data.data : []
+                data: res.data.data
             };
-        } else if (VERB === "POST") {
-            data_API.value.isLoading = false;
-            data_API.value.response = {
-                status: res.status,
-                msg: res.data.msg
-            };
-
-            if (param.includes("reset-password")) {
-                setTimeout(() => {
-                    window.location.replace("/");
-                }, 3000);
-            }
         }
-
-        if (param === "auth/login") {
-            localStorage.setItem("TOKEN_AUTH", res.data.data.token_auth);
-            window.location.replace("/dashboard")
-        }
-        if (param === "auth/register") {
-            window.location.replace("/auth")
-        }
-
 
     }).catch((error: any) => {
+        console.log(error.response);
 
-        console.log(error.response)
-        TOAST.error(error.response.statusText, {
-            position: 'top'
-        });
+        // mostramos el toast (menos para lo que es AUTH)
+        if (method === "POST" || method === "PUT" || method === "DELETE") {
 
-        if (VERB === "GET") {
-            if (param.includes("confirm-account")) {
-                data_API.value.isLoading = false;
-                data_API.value.response = {
-                    status: error.response.status,
-                    msg: error.response.statusText
-                };
-                setTimeout(() => {
-                    window.location.replace("/");
-                }, 3000);
-            }
-        } else if (VERB === "POST") {
-            data_API.value.isLoading = false;
-            data_API.value.response = {
-                status: error.response.status,
-                msg: error.response.data.msg
+
+        }
+
+        // DATA_RESPONSE_API <-- LO USAMOS ACÁ :D PARA ALMACENAR LA RESPUESTA EN CASO DE ERROR.
+        if (method === "GET") {
+            DATA_RESPONSE_API.value.isLoading = false;
+            DATA_RESPONSE_API.value.response = {
+                msg: error.response.data.msg,
+                data: error.response.data
             };
-
-            if (param.includes("reset-password")) {
-                setTimeout(() => {
-                    window.location.replace("/");
-                }, 3000);
-            }
         }
     });
 }

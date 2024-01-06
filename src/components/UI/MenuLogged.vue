@@ -36,7 +36,7 @@ export default defineComponent({
                 :orientation="'right'" :type="'button'" :isIcon="true" @onshowmenu="onShowMenu" />
         </div>
 
-        <ul v-if="decodeTOKEN.role === 'ADMINISTRADOR'" >
+        <ul v-if="decodeTOKEN.role === 'ADMINISTRADOR'">
             <RouterLink v-for="na in nav_admin" :to="{ name: na.url }">
                 <li>{{ na.name }}</li>
             </RouterLink>

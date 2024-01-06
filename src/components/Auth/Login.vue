@@ -1,27 +1,23 @@
-
 <script lang="ts">
-import { defineComponent } from 'vue';
+import ButtonApp from '../UI/ButtonApp.vue';
 import TitleHead from '../UI/TitleHead.vue';
 import LabelInput from '../UI/LabelInput.vue';
-import ButtonApp from '../UI/ButtonApp.vue';
+
 import { authStore } from "../../stores/auth";
 import { mapStores } from 'pinia';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: [],
     components: { TitleHead, LabelInput, ButtonApp },
-    computed: {
-        ...mapStores(authStore)
-    },
+    computed: { ...mapStores(authStore) }
 });
-
 </script>
 
 <template>
     <TitleHead :text="'Bienvenido'" :orientation="'center'" :isUpper="true" />
-
     <div class="content_form">
-        <form class="px-8 pt-6 pb-8 mb-4" @submit.prevent="authStore.onSubmitFormAuth('LOGIN')">
+        <form class="px-8 pt-6 pb-8 mb-4" @submit.prevent="authStore.onActionAuth('LOGIN')">
             <div class="mb-4">
                 <LabelInput :text="'Correo electrónico'" :for_name="'email'" />
                 <input class="auth_form_inputs  w-full leading-tight focus:outline-none focus:shadow-outline" id="email"
@@ -32,7 +28,6 @@ export default defineComponent({
                 <input class="auth_form_inputs  w-full   leading-tight focus:outline-none focus:shadow-outline"
                     id="password" type="password" placeholder="******************" v-model="authStore.form_data.password">
             </div>
-
             <div style="text-align: center;">
                 <ButtonApp :text="'Iniciar sesión'" :orientation="'center'" :type="'submit'" />
                 <div>

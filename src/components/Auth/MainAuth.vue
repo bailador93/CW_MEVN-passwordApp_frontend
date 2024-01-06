@@ -1,14 +1,12 @@
-
 <script lang="ts">
-import { RouterView } from 'vue-router'
 import SlotApp from "../SlotApp.vue"
+
+import { RouterView } from 'vue-router'
 import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: [],
-    components: {
-        SlotApp
-    }
+    components: { SlotApp }
 });
 
 </script>
@@ -20,7 +18,6 @@ export default defineComponent({
                 <SlotApp v-slot:LAYOUT_APP_SIDE_LEFT>
                 </SlotApp>
             </div>
-
             <div class="basis-3/5 app_main_side_right_content">
                 <SlotApp v-slot:LAYOUT_APP_SIDE_RIGHT>
                     <RouterView />

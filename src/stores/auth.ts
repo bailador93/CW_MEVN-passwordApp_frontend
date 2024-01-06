@@ -1,77 +1,66 @@
 import { ref } from 'vue'
-import { defineStore } from 'pinia'
 import { useToast } from 'vue-toast-notification';
+import { useRoute } from 'vue-router';
 import { connectAPI } from '@/Helpers/connectAPI';
+import { defineStore } from 'pinia';
 
 export const authStore = defineStore('auth', () => {
 
   const $toast = useToast();
+  const DATA_RESPONSE_API = ref({ isLoading: true, response: {} });
+  const form_data = ref({ name: "", lastname: "", email: "", birth: "", password: "", confirm_password: "" });
+  const $route = useRoute();
 
-  const form_data = ref({
-    name: "",
-    lastname: "",
-    email: "",
-    birth: "",
-    password: "",
-    confirm_password: ""
-  });
-
-  const data_API = ref({
-    isLoading: true,
-    response: {}
-  });
-
-  const onSubmitFormAuth = (typeAuth: string, idParam: string = "") => {
-
-    let msg = "";
-    let new_data: any = {};
+  const onActionAuth = (ACTION: string, idParam: string = "") => {
+    const TOKEN: string = "";
+    const IS_AUTH: boolean = TOKEN ? true : false;
+    let isToast = false;
+    let param: string = "";
+    let msg: string = "";
+    let data_form: any = {};
+    let method: string = "POST";
 
     const { name, lastname, email, birth, password, confirm_password } = form_data.value;
 
-    if (typeAuth === "LOGIN") {
-      new_data.email = email;
-      new_data.password = password;
-      if (email.trim() === "" || password.trim() === "") {
-        msg = "All fields are required";
-      }
-    } else if (typeAuth === "RECOVERY") {
-      new_data.email = email;
-      if (email.trim() === "") {
-        msg = "Field E-mail is required";
-      }
-    } else if (typeAuth === "REGISTER") {
-      new_data = form_data.value;
-      if (name.trim() === "" || lastname.trim() === "" || email.trim() === "" || birth.trim() === "" || password.trim() === ""
-        || confirm_password.trim() === "") {
-        msg = "All fields are required";
+    switch (ACTION) {
+      case "LOGIN":
+        param = "auth/login";
+        data_form.email = email;
+        data_form.password = password;
+        if (email.trim() === "" || password.trim() === "") msg = "Todos los campos son requeridos";
+        break;
 
-      } else if (password !== confirm_password) {
-        msg = "The password must be the same";
-      }
-    } else if (typeAuth === "RESET") {
-      new_data = form_data.value;
+      case "REGISTER":
+        param = "auth/register";
+        data_form = form_data.value;
+        if (name.trim() === "" || lastname.trim() === "" || email.trim() === "" || birth.trim() === "" || password.trim() === ""
+          || confirm_password.trim() === "") msg = "Todos los campos son requeridos"
+        else if (password !== confirm_password) msg = "Las contraseñas ingresadas deben ser iguales";
+        break;
 
-      if (password.trim() === "" || confirm_password.trim() === "") {
-        msg = "All fields are required";
+      case "RECOVERY":
+        param = "/auth/recovery";
+        data_form.email = email;
+        if (email.trim() === "") msg = "El campo 'E-mail' es requerido";
+        break;
 
-      } else if (password !== confirm_password) {
-        msg = "The password must be the same";
-      }
+      case "RESET":
+        param = `auth/reset-password/${idParam}`;
+        data_form = form_data.value;
+        if (password.trim() === "" || confirm_password.trim() === "") msg = "Todos los campos son requeridos"
+        else if (password !== confirm_password) msg = "Las contraseñas ingresadas deben ser iguales";
+        break;
+
+      case "GET_TOKEN_CONFIRM":
+        method = "GET";
+        param = `auth/confirm-account/${$route.params.id}`;
+        break;
     }
-
-    if (msg) {
-      $toast.error(msg, {
-        position: 'top'
-      });
-    } else {
-      connectAPI(false, "POST", typeAuth === "REGISTER" && "auth/register" ||
-        typeAuth === "LOGIN" && "auth/login" || typeAuth === "RECOVERY" && "auth/recovery" || typeAuth === "RESET" && `auth/reset-password/${idParam}`, new_data, $toast, data_API);
-    }
+    if (msg) $toast.error(msg, {
+      position: 'top'
+    })
+    else connectAPI(IS_AUTH, param, method, data_form, isToast ? $toast : null, DATA_RESPONSE_API);
   }
 
-  return {
-    form_data,
-    data_API,
-    onSubmitFormAuth
-  }
+  return { form_data, DATA_RESPONSE_API, onActionAuth }
 })
