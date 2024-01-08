@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { connectAPI } from '@/Helpers/connectAPI';
 import { defineStore } from 'pinia'
 
+
 export const adminResourceStore = defineStore('adminResource', () => {
 
     const DATA_RESPONSE_API = ref({ isLoading: true, response: {} });
@@ -59,6 +60,7 @@ export const adminResourceStore = defineStore('adminResource', () => {
                 data_form.user_id = TOKEN._id;
                 data_form.name_type = name_type.value;
                 data_form.fields = data_resources.value;
+                isToast = true;
                 break;
 
             case "GET_ADMIN_RESOURCES":
@@ -72,11 +74,14 @@ export const adminResourceStore = defineStore('adminResource', () => {
                 data_form.user_id = TOKEN._id;
                 data_form.name_type = name_type.value;
                 data_form.fields = data_resources.value;
+                isToast = true;
                 break;
 
             case "DELETE_ADMIN_RESOURCE":
                 method = "DELETE";
                 param = `admin/delete-resource/${idParam}`;
+                isToast = true;
+
                 break;
         }
 

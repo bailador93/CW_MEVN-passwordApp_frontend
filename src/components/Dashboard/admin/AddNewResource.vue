@@ -42,12 +42,12 @@ export default defineComponent({
                         </div>
 
                         <form class="pt-3 pb-3 mb-4">
-                            <div class="mb-4">
+                            <div class="mb-4" v-if="!(Object.keys(srcToEdit).length > 0)">
                                 <LabelInput :text="'Tipo de encriptado'" :for_name="'type_encrypt'" />
                                 <div style="width:100%; color:black" class="inline-block relative">
                                     <select
                                         class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
-                                        <option v-for="r in ['Encriptado1', 'Encriptado2', 'Encritpado3']" :key="r"
+                                        <option v-for="r in ['RFC 7519 - JSON Web Token (JWT)', 'AES-256 - Cryptr', 'hashids ??']" :key="r"
                                             :value="r">{{
                                                 r }}</option>
                                     </select>
@@ -61,6 +61,7 @@ export default defineComponent({
                                     </div>
                                 </div>
                             </div>
+
                             <div class="mb-4">
                                 <LabelInput :text="'Nombre del recurso'" :for_name="'name_type'" />
                                 <input v-model="adminResourceStore.name_type" 
@@ -81,8 +82,8 @@ export default defineComponent({
                                         <select v-model="adminResourceStore.type_resource.type_field"
                                             class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
                                             <!-- https://www.geeksforgeeks.org/html-input-type-attribute/ -->
-                                            <option v-for="i in ['text', 'password', 'email', 'time', 'date', 'month'
-                                                , 'tel', 'number', 'url', 'file']" :key="i" :value="i">{{ i }}
+                                            <option v-for="i in ['text', 'password', 'email', 'time', 'date',
+                                               'tel', 'number', 'url']" :key="i" :value="i">{{ i }}
                                             </option>
                                         </select>
                                         <div

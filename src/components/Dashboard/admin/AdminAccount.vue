@@ -10,17 +10,17 @@ export default defineComponent({
     computed: {
         ...mapStores(userStore)
     },
-    data(){
-        return{isRefresh: false}
+    data() {
+        return { isRefresh: false }
     },
     mounted() {
         this.userStoreStore.onActionUser("GET_USERS");
     },
     updated() {
-        if(!this.userStoreStore.useIsRefresh){
-            setTimeout(()=>{
+        if (!this.userStoreStore.useIsRefresh) {
+            setTimeout(() => {
                 this.userStoreStore.onActionUser("GET_USERS");
-            },500);
+            }, 500);
         }
     }
 });
@@ -28,9 +28,12 @@ export default defineComponent({
 </script>
 
 <template>
-    <span  style="color:transparent">{{userStoreStore.useIsRefresh}}</span>
+    <span style="color:transparent">{{ userStoreStore.useIsRefresh }}</span>
     <div v-if="userStoreStore.DATA_RESPONSE_API.isLoading">
         CARGANDO...
+    </div>
+    <div style="padding: 5%;" v-if="userStoreStore.DATA_RESPONSE_API.response?.data?.data?.length === 0">
+        <p>{{ userStoreStore.DATA_RESPONSE_API.response.data.msg }}</p>
     </div>
     <div v-else style="padding:0" class="list_resource_content_user">
         <div class="content_table_data_list">
@@ -48,7 +51,8 @@ export default defineComponent({
                         {{ r.userIsActiveByAdmin ? "Activo" : "Inactivo" }}
                     </td>
                     <td class="center">
-                        <button type="button" @click="userStoreStore.onActionUser('UPDATE_USER', r._id, !r.userIsActiveByAdmin)"
+                        <button type="button"
+                            @click="userStoreStore.onActionUser('UPDATE_USER', r._id, !r.userIsActiveByAdmin)"
                             :class="['btn_action_custom', r.userIsActiveByAdmin ? 'btn_unlock_user' : 'btn_lock_user']">
                             <i :class="r.userIsActiveByAdmin ? 'fa-solid fa-lock-open' : 'fa-solid fa-lock'"
                                 :style="{ color: r.userIsActiveByAdmin ? 'rgb(217, 247, 165)' : 'rgb(247, 165, 165)', marginRight: '5%' }"></i>

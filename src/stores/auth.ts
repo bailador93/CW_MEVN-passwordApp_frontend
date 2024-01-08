@@ -27,20 +27,31 @@ export const authStore = defineStore('auth', () => {
         param = "auth/login";
         data_form.email = email;
         data_form.password = password;
+        isToast = true;
         if (email.trim() === "" || password.trim() === "") msg = "Todos los campos son requeridos";
         break;
 
       case "REGISTER":
         param = "auth/register";
         data_form = form_data.value;
-        if (name.trim() === "" || lastname.trim() === "" || email.trim() === "" || birth.trim() === "" || password.trim() === ""
-          || confirm_password.trim() === "") msg = "Todos los campos son requeridos"
-        else if (password !== confirm_password) msg = "Las contraseñas ingresadas deben ser iguales";
+        isToast = true;
+
+        const d1 = new Date();
+        const d2 = new Date(birth);
+        const operation_year = d1.getFullYear() - d2.getFullYear()
+
+        if (operation_year <= 15) msg = "Eres menor de edad, no podés registrarte"
+        else {
+          if (name.trim() === "" || lastname.trim() === "" || email.trim() === "" || birth.trim() === "" || password.trim() === ""
+            || confirm_password.trim() === "") msg = "Todos los campos son requeridos"
+          else if (password !== confirm_password) msg = "Las contraseñas ingresadas deben ser iguales";
+        }
         break;
 
       case "RECOVERY":
-        param = "/auth/recovery";
+        param = "auth/recovery";
         data_form.email = email;
+        isToast = true;
         if (email.trim() === "") msg = "El campo 'E-mail' es requerido";
         break;
 

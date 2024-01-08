@@ -1,56 +1,61 @@
-
-
-
 export const DATA_TYPE_RESOURCE_DEFAULT = {
     RESOURCES_DEFAULT: ["Tipo de contraseña", "Tipo de tajeta", "Nota"],
     TYPE_PASSWORD: [
         {
             name_input: "Nombre",
-            type_input: "text"
+            type_input: "text",
+            field_model: "nombre"
         },
         {
             name_input: "Usuario",
-            type_input: "text"
+            type_input: "text",
+            field_model: "usuario"
         },
         {
             name_input: "Contraseña",
-            type_input: "password"
-        },
-        {
-            name_input: "Confirmar contraseña",
-            type_input: "password"
+            type_input: "password",
+            field_model: "password"
         }
     ],
     TYPE_CARD: [
         {
             name_input: "Nombre",
-            type_input: "text"
+            type_input: "text",
+            field_model: "nombre"
         },
         {
             name_input: "Nro de tarjeta",
-            type_input: "text"
+            type_input: "password",
+            field_model: "nro_de_tarjeta"
         },
         {
             name_input: "Mes de expiración",
-            type_input: "text"
+            type_input: "text",
+            field_model: "mes_de_expiracion"
         },
         {
             name_input: "Año de expiración",
-            type_input: "text"
+            type_input: "text",
+            field_model: "anio_de_expiracion"
         },
         {
             name_input: "Código de seguridad",
-            type_input: "text"
+            type_input: "password",
+            field_model: "codigo_de_seguridad"
         }
     ],
     NOTE: [
         {
             name_input: "Nombre",
-            type_input: "text"
+            type_input: "text",
+            field_model: "nombre"
+
         },
         {
             name_input: "Descripción",
-            type_input: "textarea"
+            type_input: "textarea",
+            field_model: "descripcion"
+
         }
     ],
 };

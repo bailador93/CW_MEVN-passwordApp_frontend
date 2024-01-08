@@ -13,7 +13,7 @@ export const userStore = defineStore('userStore', () => {
     const useIsRefresh = ref(false);
 
     const DATA_RESPONSE_API = ref({ isLoading: true, response: {} });
-    const form_data = ref({ username: "", password: "", confirm_password: "" });
+    const form_data = ref({ email: "", password: "", confirm_password: "" });
 
     const onActionUser = (ACTION: string, idParam: string = "", isInactive: boolean = false) => {
         const TOKEN: string = localStorage.getItem("TOKEN_AUTH") ? jwtDecode(localStorage.getItem("TOKEN_AUTH") || "") : "";
@@ -36,19 +36,20 @@ export const userStore = defineStore('userStore', () => {
                 method = "PUT";
                 param = `user/desactivate-user/${idParam}`;
                 data_form.userIsActiveByAdmin = isInactive;
+                isToast= true;
                 break;
 
             case "UPDATE_PROFILE_ADMIN":
                 method = "PUT";
                 param = `user/edit-profile/${TOKEN._id}`;
-
-                data_form.username = form_data.value.username;
+                data_form.email = form_data.value.email;
                 data_form.password = form_data.value.password;
                 data_form.confirm_password = form_data.value.confirm_password;
+                isToast = true;
                 break;
         }
 
-        connectAPI(IS_AUTH, param, method, data_form, isToast ? $toast : null, DATA_RESPONSE_API);
+        connectAPI(IS_AUTH, param, method, data_form, isToast ? $toast : null, DATA_RESPONSE_API, form_data.value);
     }
     return {
         userActive, useIsRefresh, DATA_RESPONSE_API, form_data, onActionUser

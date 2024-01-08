@@ -7,6 +7,7 @@ import { defineComponent } from 'vue';
 import { adminResourceStore } from "../../../stores/adminResource";
 import { DATA_TYPE_RESOURCE_DEFAULT } from "../../../assets/data/dataStatic";
 
+
 export default defineComponent({
     props: [],
     components: { AddNewResource, ButtonApp },
@@ -47,19 +48,30 @@ export default defineComponent({
             this.resourcerToEdit = src;
         },
         onDeleteResource(src: any, i: any) {
-            this.adminResourceStore.DATA_RESPONSE_API.response.data.splice(i, 1);
-            this.adminResourceStore.onActionAminResource("DELETE_ADMIN_RESOURCE", src._id);
-            this.isRefresh = true;
+            console.log("asd")
+            this.$confirm.require({
+                message: `Querés eliminar el registro '${src.name_type}'`,
+                header: 'Confirmar eliminación',
+                icon: 'pi pi-info-circle',
+                rejectClass: 'p-button-text p-button-text',
+                acceptClass: 'p-button-danger p-button-text',
+                accept: () => {
+                    this.adminResourceStore.DATA_RESPONSE_API.response.data.splice(i, 1);
+                    this.adminResourceStore.onActionAminResource("DELETE_ADMIN_RESOURCE", src._id);
+                    this.isRefresh = true;
+                },
+            });
         }
     },
     mounted() {
         if (!this.isRefresh) this.adminResourceStore.onActionAminResource("GET_ADMIN_RESOURCES");
     }
-
 });
 </script>
 
-<template> 
+<template>
+    <Toast />
+    <ConfirmDialog></ConfirmDialog>
     <div class="content_table_data_list">
         <div class="list_resource_content_user">
             <div style="padding-top:3%; padding-right: 3%;">
@@ -84,7 +96,6 @@ export default defineComponent({
                             <td class="center">Por Defecto</td>
                             <td class="center">-</td>
                         </tr>
-
                         <div style="padding: 5%;"
                             v-if="adminResourceStore.DATA_RESPONSE_API.response?.data?.data?.length === 0">
                             <p>{{ adminResourceStore.DATA_RESPONSE_API.response.data.msg }}</p>
